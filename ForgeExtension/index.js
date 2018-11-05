@@ -34,6 +34,7 @@ const GraphManager = class {
         };
     }
     load() {
+        console.log("hello lo");
         if (this.viewer.toolbar) {
             // Toolbar is already available, create the UI
             this.createUI();
@@ -91,4 +92,6 @@ const GraphManager = class {
 
 export default (function() {
     Autodesk.Viewing.theExtensionManager.registerExtension('GraphManager', GraphManager);
+
+    window.spinal.ForgeExtentionManager.addExtention('GraphManager');
 })();
