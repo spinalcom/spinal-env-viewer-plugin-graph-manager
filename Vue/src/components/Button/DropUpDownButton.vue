@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import BaseIconButton from "./BaseIconButton,vue";
+    import BaseIconButton from "./BaseIconButton.vue";
 
     export default {
         name: "DropUpDownButton",
