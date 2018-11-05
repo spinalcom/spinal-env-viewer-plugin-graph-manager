@@ -34,7 +34,7 @@ const GraphManager = class {
         };
     }
     load() {
-        console.log("hello lo");
+
         if (this.viewer.toolbar) {
             // Toolbar is already available, create the UI
             this.createUI();
@@ -60,13 +60,14 @@ const GraphManager = class {
         var panel = this.panel;
 
         // button to show the docking panel
-        var toolbarButtonShowDockingPanel = new Autodesk.Viewing.UI.Button('showMyAwesomePanel');
+        var toolbarButtonShowDockingPanel = new Autodesk.Viewing.UI.Button('Graph Manager');
         toolbarButtonShowDockingPanel.onClick = function (e) {
             // if null, create it
             if (panel == null) {
-                panel = new MyAwesomePanel(viewer, viewer.container,
-                    'awesomeExtensionPanel', 'My Awesome Extension');
+                panel = new GraphManagerPanel(viewer, viewer.container,
+                    'Graph Manager', 'Graph Manager');
             }
+            console.log("hello lo");
             // show/hide docking panel
             panel.setVisible(!panel.isVisible());
         };
@@ -79,11 +80,11 @@ const GraphManager = class {
             background-repeat: no-repeat;
             background-position: center;
         }*/
-        toolbarButtonShowDockingPanel.addClass('myAwesomeToolbarButton');
-        toolbarButtonShowDockingPanel.setToolTip('My Awesome extension');
+        toolbarButtonShowDockingPanel.addClass('GraphManagerButton');
+        toolbarButtonShowDockingPanel.setToolTip('Graph Manager');
 
         // SubToolbar
-        this.subToolbar = new Autodesk.Viewing.UI.ControlGroup('MyAwesomeAppToolbar');
+        this.subToolbar = new Autodesk.Viewing.UI.ControlGroup('Graph');
         this.subToolbar.addControl(toolbarButtonShowDockingPanel);
 
         viewer.toolbar.addControl(this.subToolbar);
