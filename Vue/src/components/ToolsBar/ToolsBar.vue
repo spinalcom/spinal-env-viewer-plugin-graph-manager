@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import BaseBadgeIconButton from "../Button/BaseBadgeIconButton";
+    import BaseBadgeIconButton from "../Button/BaseBadgeIconButton.vue";
 
     export default {
         name: "ToolsBar",

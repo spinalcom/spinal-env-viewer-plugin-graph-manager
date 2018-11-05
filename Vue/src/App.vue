@@ -13,8 +13,8 @@
 <script>
 
     import NodesList from "./components/Nodes/NodesList.vue";
-    import TopBar from "./components/ToolsBar/TopBar";
-    import SideBar from "./components/ToolsBar/SideBar";
+    import TopBar from "./components/ToolsBar/TopBar.vue";
+    import SideBar from "./components/ToolsBar/SideBar.vue";
     import {mapState} from 'vuex'
 
     export default {

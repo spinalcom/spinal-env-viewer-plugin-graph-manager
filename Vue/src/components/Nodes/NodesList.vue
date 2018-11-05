@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import NodeItem from "./NodeItem";
+    import NodeItem from "./NodeItem.vue";
     export default {
         name: "NodesList",
         components: {NodeItem},

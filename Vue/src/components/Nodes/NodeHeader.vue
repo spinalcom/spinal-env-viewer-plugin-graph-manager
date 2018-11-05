@@ -18,9 +18,9 @@
 </template>
 
 <script>
-    import DropUpDownButton from "../Button/DropUpDownButton";
-    import BaseIconButton from "../Button/BaseIconButton";
-    import ColorMaker from "../ColorMarker/ColorMaker";
+    import DropUpDownButton from "../Button/DropUpDownButton.vue";
+    import BaseIconButton from "../Button/BaseIconButton.vue";
+    import ColorMaker from "../ColorMarker/ColorMaker.vue";
     export default {
         name: "NodeHeader",
         components: {ColorMaker, BaseIconButton, DropUpDownButton},

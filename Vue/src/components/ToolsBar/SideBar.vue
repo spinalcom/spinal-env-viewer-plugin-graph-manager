@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    import ToolsBar from "./ToolsBar";
+    import ToolsBar from "./ToolsBar.vue";
     export default {
         name: "SideBar",
         components: {ToolsBar},

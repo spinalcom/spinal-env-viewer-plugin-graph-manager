@@ -43,10 +43,10 @@
 </template>
 
 <script>
-    import DropUpDownButton from "../Button/DropUpDownButton";
-    import BaseIconButton from "../Button/BaseIconButton";
-    import ColorMaker from "../ColorMarker/ColorMaker";
-    import NodeHeader from "./NodeHeader";
+    import DropUpDownButton from "../Button/DropUpDownButton.vue";
+    import BaseIconButton from "../Button/BaseIconButton.vue";
+    import ColorMaker from "../ColorMarker/ColorMaker.vue";
+    import NodeHeader from "./NodeHeader.vue";
 
     export default {
         name: "NodeItem",
