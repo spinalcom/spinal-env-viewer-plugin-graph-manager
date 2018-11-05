@@ -41,15 +41,17 @@ const dummyData = {
             info: {name: "node 3", color: "#c0ff15"},
             children: [{info: {name: "node 4", color: "#c0ff15"}, children: []}]
         }]
-}
+};
 let store = new Vuex.Store({
 
     state: dummyData,
-    mutations: {
-
-    }
+    mutations: {}
 });
-export default new Vue({
+let component =  new Vue({
     render: h => h(App),
     store
-})
+});
+export default {
+    Component: component,
+    Store: store
+}

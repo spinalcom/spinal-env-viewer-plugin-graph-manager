@@ -1,4 +1,4 @@
-import GraphManagerPanel from "../Vue"
+import GraphManagerVue from "spinal-env-viewer-plugin-graph-manager-vue"
 function GraphManagerPanel(viewer, container, id, title, options) {
     this.viewer = viewer;
     Autodesk.Viewing.UI.DockingPanel.call(this, container, id, title, options);
@@ -14,7 +14,7 @@ function GraphManagerPanel(viewer, container, id, title, options) {
 
     // this is where we should place the content of our panel
     var div = document.createElement('div');
-    GraphManagerPanel.$mount(div);
+    GraphManagerVue.Component.$mount(div);
     this.container.appendChild(div);
     // and may also append child elements...
 
