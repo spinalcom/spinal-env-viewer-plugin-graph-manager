@@ -18,6 +18,15 @@
   },
   "homepage": "https://github.com/LorisC/graph-manager#readme",
   "dependencies": {
-    "spinal-env-viewer-plugin-graph-manager-vue": "file:Vue"
-  }
+      "spinal-env-viewer-plugin-graph-manager-vue": "file:Vue",
+      "babel-cli": "^6.26.0",
+      "babel-preset-env": "^1.7.0"
+  },
+    "browserify": {
+	"transform": [
+	    "vueify",
+	    "imgurify",
+	    "babelify"
+	]
+    }
 }
