@@ -49,7 +49,7 @@ const GraphManager = class {
         this.viewer.toolbar.removeControl(this.subToolbar);
         return true;
     }
-    onToolbarCreated  function () {
+    onToolbarCreated   () {
         this.viewer.removeEventListener(av.TOOLBAR_CREATED_EVENT, this.onToolbarCreatedBinded);
         this.onToolbarCreatedBinded = null;
         this.createUI();
