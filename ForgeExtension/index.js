@@ -1,37 +1,31 @@
-function onToolbarCreated() {
-    this.viewer.removeEventListener(
-        window.av.TOOLBAR_CREATED_EVENT,
-        this.onToolbarCreatedBinded
-    );
-    this.onToolbarCreatedBinded = null;
-    createToolbar.call(this);
+import GraphManagerPanel from "../Vue"
+function GraphManagerPanel(viewer, container, id, title, options) {
+    this.viewer = viewer;
+    Autodesk.Viewing.UI.DockingPanel.call(this, container, id, title, options);
+
+    // the style of the docking panel
+    // use this built-in style to support Themes on Viewer 4+
+    this.container.classList.add('docking-panel-container-solid-color-a');
+    this.container.style.top = "10px";
+    this.container.style.left = "10px";
+    this.container.style.width = "auto";
+    this.container.style.height = "auto";
+    this.container.style.resize = "auto";
+
+    // this is where we should place the content of our panel
+    var div = document.createElement('div');
+    GraphManagerPanel.$mount(div);
+    this.container.appendChild(div);
+    // and may also append child elements...
+
 }
 
-function createToolbar() {
-    var button1 = new window.Autodesk.Viewing.UI.Button(this.cfg.toolbar.label);
-    button1.onClick = () => {
-        this.tooglePanel();
-    };
-    var icon = button1.container.firstChild;
-    icon.className = "adsk-button-icon md-icon md-icon-font md-theme-default";
-    icon.innerHTML = this.cfg.toolbar.icon;
-    button1.setToolTip(this.cfg.toolbar.label);
-    this.subToolbar = this.viewer.toolbar.getControl(
-        this.cfg.toolbar.subToolbarName
-    );
-    if (!this.subToolbar) {
-        this.subToolbar = new window.Autodesk.Viewing.UI.ControlGroup(
-            this.cfg.toolbar.subToolbarName
-        );
-        this.viewer.toolbar.addControl(this.subToolbar);
-    }
-    this.subToolbar.addControl(button1);
-}
+GraphManagerPanel.prototype = Object.create(Autodesk.Viewing.UI.DockingPanel.prototype);
+GraphManagerPanel.prototype.constructor = GraphManagerPanel;
 
-
-const SpinalForgeExtention = class {
+const GraphManager = class {
     constructor(viewer, options) {
-        window.Autodesk.Viewing.Extension.call(this, viewer, options);
+        Autodesk.Viewing.Extension.call(this, viewer, options);
         this.cfg = {};
         this.cfg.toolbar = {
             icon: "done", // icon name from material
@@ -40,22 +34,61 @@ const SpinalForgeExtention = class {
         };
     }
     load() {
-        // add toolbar
         if (this.viewer.toolbar) {
-            createToolbar.call(this);
+            // Toolbar is already available, create the UI
+            this.createUI();
         } else {
-            this.onToolbarCreatedBinded = onToolbarCreated.bind(this);
-            this.viewer.addEventListener(
-                window.av.TOOLBAR_CREATED_EVENT,
-                this.onToolbarCreatedBinded
-            );
+            // Toolbar hasn't been created yet, wait until we get notification of its creation
+            this.onToolbarCreatedBinded = this.onToolbarCreated.bind(this);
+            this.viewer.addEventListener(av.TOOLBAR_CREATED_EVENT, this.onToolbarCreatedBinded);
         }
-        // create/init panel here ?
+        return true;
     }
     unload() {
         this.viewer.toolbar.removeControl(this.subToolbar);
+        return true;
     }
-    toogle() {
-        this.panel.setVisible(true);
+    onToolbarCreated = function () {
+        this.viewer.removeEventListener(av.TOOLBAR_CREATED_EVENT, this.onToolbarCreatedBinded);
+        this.onToolbarCreatedBinded = null;
+        this.createUI();
+    };
+
+    createUI() {
+        var viewer = this.viewer;
+        var panel = this.panel;
+
+        // button to show the docking panel
+        var toolbarButtonShowDockingPanel = new Autodesk.Viewing.UI.Button('showMyAwesomePanel');
+        toolbarButtonShowDockingPanel.onClick = function (e) {
+            // if null, create it
+            if (panel == null) {
+                panel = new MyAwesomePanel(viewer, viewer.container,
+                    'awesomeExtensionPanel', 'My Awesome Extension');
+            }
+            // show/hide docking panel
+            panel.setVisible(!panel.isVisible());
+        };
+        // myAwesomeToolbarButton CSS class should be defined on your .css file
+        // you may include icons, below is a sample class:
+        /*
+        .myAwesomeToolbarButton {
+            background-image: url(/img/myAwesomeIcon.png);
+            background-size: 24px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }*/
+        toolbarButtonShowDockingPanel.addClass('myAwesomeToolbarButton');
+        toolbarButtonShowDockingPanel.setToolTip('My Awesome extension');
+
+        // SubToolbar
+        this.subToolbar = new Autodesk.Viewing.UI.ControlGroup('MyAwesomeAppToolbar');
+        this.subToolbar.addControl(toolbarButtonShowDockingPanel);
+
+        viewer.toolbar.addControl(this.subToolbar);
     }
 };
+
+export default (function() {
+    Autodesk.Viewing.theExtensionManager.registerExtension('GraphManager', GraphManager);
+})();

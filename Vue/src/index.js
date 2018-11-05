@@ -49,7 +49,7 @@ let store = new Vuex.Store({
 
     }
 });
-new Vue({
+export default new Vue({
     render: h => h(App),
     store
-}).$mount('#app');
+})
