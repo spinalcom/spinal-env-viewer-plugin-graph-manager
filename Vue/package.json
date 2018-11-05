@@ -46,7 +46,6 @@
   "browserify": {
     "transform": [
       "vueify",
-      "imgurify",
       "babelify"
     ]
   }

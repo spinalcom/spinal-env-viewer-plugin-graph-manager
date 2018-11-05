@@ -12,7 +12,7 @@
 
 <script>
 
-    import NodesList from "./components/Nodes/NodesList";
+    import NodesList from "./components/Nodes/NodesList.vue";
     import TopBar from "./components/ToolsBar/TopBar";
     import SideBar from "./components/ToolsBar/SideBar";
     import {mapState} from 'vuex'
