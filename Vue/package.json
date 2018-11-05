@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "main": "./src/index.js",
@@ -12,10 +10,11 @@
     "material-design-icons": "^3.0.1",
     "vue": "^2.5.17",
     "vue-material": "^1.0.0-beta-10.2",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.5",
     "@vue/cli-plugin-eslint": "^3.0.5",
     "@vue/cli-service": "^3.0.5",
     "vue-template-compiler": "^2.5.17"
@@ -43,5 +42,12 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "browserify": {
+    "transform": [
+      "vueify",
+      "imgurify",
+      "babelify"
+    ]
+  }
 }
