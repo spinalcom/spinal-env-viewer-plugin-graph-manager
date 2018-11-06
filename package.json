@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/LorisC/graph-manager#readme",
   "dependencies": {
-      "spinal-env-viewer-plugin-graph-manager-vue": "file:Vue"
+    "babel-core": "^6.26.3",
+    "spinal-env-viewer-plugin-graph-manager-vue": "file:Vue",
+    "spinalgraph": "git+https://github.com/spinalcom/spinal-model-graph.git",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
   }
-
 }

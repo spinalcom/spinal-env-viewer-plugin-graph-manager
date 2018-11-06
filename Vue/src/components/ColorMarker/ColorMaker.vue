@@ -25,7 +25,7 @@
                 if (this.color !== "")
                     this.style = "background:" + this.color + "; width: 15px";
                 else
-                    this.style = "";
+                    this.style = "width: 15px";
             }
         },
         watch: {

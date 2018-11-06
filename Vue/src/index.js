@@ -43,9 +43,22 @@ const dummyData = {
 let store = new Vuex.Store({
 
     state: dummyData,
-    mutations: {}
+    getters: {
+
+    },
+    mutations: {
+        ADD_NODES: (state, nodes)=>{
+            state.nodes.push(...nodes);
+        }
+    },
+
+    actions:{
+      addNodes(context,nodes){
+          context.commit("ADD_NODES", nodes)
+      }
+    }
 });
-let component =  new Vue({
+let component = new Vue({
     render: h => h(App),
     store
 });

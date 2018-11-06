@@ -1,13 +1,15 @@
 <template>
-    <div class="NodeHeader">
+    <div class="nodeHeader">
         <drop-up-down-button
                 :opened="opened"
                 :click="displayChildren"
                 v-if="hasChild"
         />
-        {{info.name}}
+        <div class="name">
+            <h3> {{info.name}}</h3>
+        </div>
         <base-icon-button
-                id="hideObjectEye"
+                class="item"
                 :button-info="{icon: 'remove_red_eye', toolTip: '' }"
                 :click="hideBimObject"
         />
@@ -21,24 +23,25 @@
     import DropUpDownButton from "../Button/DropUpDownButton.vue";
     import BaseIconButton from "../Button/BaseIconButton.vue";
     import ColorMaker from "../ColorMarker/ColorMaker.vue";
+
     export default {
         name: "NodeHeader",
         components: {ColorMaker, BaseIconButton, DropUpDownButton},
-        props:{
+        props: {
             opened: {
                 type: Boolean,
                 required: true
             },
-            displayChildren:{
+            displayChildren: {
                 type: Function,
                 required: true
             },
-            hasChild:{
+            hasChild: {
                 type: Boolean,
                 required: true
             },
             info: {
-                type:Object,
+                type: Object,
                 required: true
             },
             hideBimObject: {
@@ -50,7 +53,19 @@
 </script>
 
 <style scoped>
-    .NodeHeader{
-        display: flex;
+    .nodeHeader {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        width: 100%;
     }
+
+    .item {
+        text-align: center;
+    }
+
+    .name {
+
+        width: 50%;
+    }
+
 </style>

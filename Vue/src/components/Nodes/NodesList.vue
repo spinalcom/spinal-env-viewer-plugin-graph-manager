@@ -1,19 +1,23 @@
 <template>
 
-    <md-list>
-        <div class="items" v-for="(node, index) in nodes" :key="'node' + index">
-            <node-item :info="node.info" :children="node.children"></node-item>
-        </div>
-    </md-list>
+    <div class="items">
+        <node-item class="item"
+                   v-for="(node, index) in nodes"
+                   :key="'node' + index"
+                   :info="node.info"
+                   :children="node.children"/>
+
+    </div>
 
 </template>
 
 <script>
     import NodeItem from "./NodeItem.vue";
+
     export default {
         name: "NodesList",
         components: {NodeItem},
-        props:{
+        props: {
             nodes: {
                 type: Array,
                 default: function () {
@@ -25,5 +29,7 @@
 </script>
 
 <style scoped>
-
+    .items {
+        width: 100%;
+    }
 </style>

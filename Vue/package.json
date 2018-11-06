@@ -2,15 +2,13 @@
   "name": "spinal-env-viewer-plugin-graph-manager-vue",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "lint": "vue-cli-service lint"
-  },
   "main": "./src/index.js",
   "dependencies": {
     "material-design-icons": "^3.0.1",
     "vue": "^2.5.17",
     "vue-material": "^1.0.0-beta-10.2",
     "vuex": "^3.0.1",
+    "babel-core": "^6.26.3",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0"
   },
