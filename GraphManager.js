@@ -1,5 +1,5 @@
 import {SpinalGraph, SpinalContext, GraphFunction} from 'spinalgraph';
-
+import "./DummyButton.js"
 function createDummyContext() {
     const Context = new SpinalContext("DummyContext", "DummyContext");
     Context.addChild(new window.Model(), "has floor")
@@ -8,7 +8,7 @@ function createDummyContext() {
 export default class GraphManager {
     constructor(store) {
         this.nodes = [];
-        this.nodesInfo = {}
+
         window.spinal.spinalSystem.getModel().then((function (forgeFile) {
             if (!forgeFile.hasOwnProperty('graph')) {
                 forgeFile.add_attr({
@@ -19,7 +19,7 @@ export default class GraphManager {
             this.graph.getChildren(['hasContext']).then(children => {
                 let promises = [];
                 for (let i = 0; i < children.length; i++) {
-                    promises.push(node2display(children[i]));
+                    promises.push(node2display(children[i],children[i]));
                 }
                 Promise.all(promises).then(result => {
 
@@ -37,13 +37,17 @@ export default class GraphManager {
 
 }
 
-async function transformNode(result, node, set) {
+async function transformNode(result, context,node, set) {
 
     if (set.has(node))
         return;
 
     result['info'] = {};
     result['children'] = [];
+    result['context'] = {
+        context: context,
+        selectedNode: node
+    };
 
     if (node.info.hasOwnProperty("name"))
         result['info']['name'] = node.info.name.get();
@@ -53,7 +57,7 @@ async function transformNode(result, node, set) {
     let children = await node.getChildren([]);
     for (let i = 0; i < children.length; i++) {
         result['children'].push({});
-        result['children'][i] = await transformNode(result['children'][i], children[i], set)
+        result['children'][i] = await transformNode(result['children'][i], context, children[i], set)
     }
 
     return result;
@@ -61,8 +65,8 @@ async function transformNode(result, node, set) {
 
 
 
-function node2display(node) {
+function node2display(context, node) {
     const set = new Set();
 
-    return transformNode({}, node, set)
+    return transformNode({}, context, node, set)
 }

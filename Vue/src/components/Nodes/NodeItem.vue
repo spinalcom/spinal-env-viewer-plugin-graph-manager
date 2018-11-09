@@ -1,19 +1,19 @@
 <template>
-
     <div>
         <node-header
+                class="node-header"
                 :has-child="children.length > 0"
                 :display-children="displayChildren"
                 :hide-bim-object="hideBIMObject"
                 :info="info"
                 :opened="opened"
+                @node-selected="$emit('node-selected', context)"
         />
-            <ul class="children" v-if="opened">
-                <li v-for="child in children">
-                    {{logChild (child)}}
-                    <node-item :info="child.info" :children="child.children"/>
-                </li>
-            </ul>
+        <ul class="children" v-if="opened">
+            <li v-for="child in children">
+                <node-item :info="child.info" :children="child.children" :context="child.context" @node-selected="$emit('node-selected', child.context)"/>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -32,10 +32,15 @@
                 opened: false
             }
         },
+
         props: {
             info: {
                 type: Object,
                 required: true,
+            },
+            context: {
+                type: Object,
+                required: true
             },
             children: {
                 type: Array,
@@ -54,8 +59,11 @@
                 console.log("hide bim object");
             },
             logChild: function (child) {
-                console.log("vue child",child)
+                console.log("vue child", child)
 
+            },
+            onSelectedNode: function () {
+                this.onClick(this.context);
             }
         },
 
@@ -72,5 +80,9 @@
     ul {
         width: 100%;
         list-style-type: none;
+    }
+
+    .node-header {
+        border: 2px solid;
     }
 </style>

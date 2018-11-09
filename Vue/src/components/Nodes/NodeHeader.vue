@@ -1,5 +1,5 @@
 <template>
-    <div class="nodeHeader">
+    <div class="node-header" @click="$emit('node-selected')">
         <drop-up-down-button
                 :opened="opened"
                 :click="displayChildren"
@@ -10,7 +10,7 @@
         </div>
         <base-icon-button
                 class="item"
-                :button-info="{icon: 'remove_red_eye', toolTip: '' }"
+                :button-info="{icon: 'remove_red_eye', toolTip: '', icon_type: 'in', fontColor: '#FFF', backgroundColor: '#ff191c' }"
                 :click="hideBimObject"
         />
         <color-maker
@@ -53,7 +53,7 @@
 </script>
 
 <style scoped>
-    .nodeHeader {
+    .node-header {
         display: grid;
         grid-template-columns: auto auto auto auto;
         width: 100%;

@@ -2,7 +2,11 @@
     <div>
         <div v-for="(b, index) in buttons" v-bind:key="index">
             <a :style="classes.a">
-                <base-badge-icon-button :button="b.button" :badge_content="b.badge_content"  :click="b.func"/>
+                <base-badge-icon-button
+                        :button="b.button"
+                        :badge_content="b.badge_content"
+                        @click="b.button.action(option)"
+                />
             </a>
         </div>
     </div>
@@ -29,6 +33,9 @@
                         }
                     }
                 }
+            },
+            option: {
+                type:Object
             }
         }
     }

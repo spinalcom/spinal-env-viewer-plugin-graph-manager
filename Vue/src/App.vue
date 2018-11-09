@@ -1,11 +1,11 @@
 <template>
     <div id="app">
         <div>
-            <top-bar :buttons="topBarButton"/>
+            <top-bar :buttons="topBarButton" />
         </div>
         <div id="graph_body">
-            <side-bar :buttons="sidBarButton"/>
-            <nodes-list :nodes="nodes"/>
+            <side-bar :buttons="sideBarButton" :option="selectedNode"/>
+            <nodes-list @node-selected="onNodeSelected($event)" :nodes="nodes"/>
         </div>
     </div>
 </template>
@@ -26,16 +26,23 @@
         },
         computed: mapState([
             'topBarButton',
-            'sidBarButton',
-            'nodes'
+            'sideBarButton',
+            'nodes',
+            'selectedNode'
         ]),
+        methods: {
+            onNodeSelected: function (node) {
+                console.log(this.sideBarButton);
+                this.$store.dispatch("setSelectedNode", node);
+            }
+        }
 
     }
 
 </script>
 
 <style scoped>
-    #app {
+    .app * {
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

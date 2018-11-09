@@ -1,6 +1,8 @@
 <template>
     <div>
-        <md-button class="md-icon-button md-primary"  v-on:click="click" >
+        <md-button class="md-icon-button md-primary"
+                   v-on:click="click"
+        >
             <md-icon>
                 {{icon}}
             </md-icon>
