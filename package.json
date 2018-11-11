@@ -24,6 +24,7 @@
     "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
     "spinal-env-viewer-context-menu-service": "file:spinal-env-viewer-context-menu-service",
     "spinal-env-viewer-plugin-graph-manager-vue": "file:Vue",
+    "spinal-env-viewer-vue-components-lib": "git+https://github.com/spinalcom/spinal-env-viewer-vue-components-lib.git",
     "spinalgraph": "git+https://github.com/spinalcom/spinal-model-graph.git"
   }
 }
