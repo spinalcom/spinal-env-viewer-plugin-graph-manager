@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div>
-            <top-bar :buttons="topBarButton" />
+            <top-bar :buttons="topBarButton"/>
         </div>
         <div id="graph_body">
             <side-bar :buttons="sideBarButton" :option="selectedNode"/>
@@ -12,9 +12,7 @@
 
 <script>
 
-    import NodesList from "./components/Nodes/NodesList.vue";
-    import TopBar from "./components/ToolsBar/TopBar.vue";
-    import SideBar from "./components/ToolsBar/SideBar.vue";
+    import {NodesList, TopBar, SideBar} from "spinal-env-viewer-plugin-graph-manager-vue";
     import {mapState} from 'vuex'
 
     export default {
@@ -22,7 +20,7 @@
         components: {
             SideBar,
             TopBar,
-            NodesList,
+            NodesList
         },
         computed: mapState([
             'topBarButton',
@@ -30,12 +28,13 @@
             'nodes',
             'selectedNode'
         ]),
-        methods: {
-            onNodeSelected: function (node) {
-                console.log(this.sideBarButton);
-                this.$store.dispatch("setSelectedNode", node);
+        methods:
+            {
+                onNodeSelected: function (node) {
+                    console.log(this.sideBarButton);
+                    this.$store.dispatch("setSelectedNode", node);
+                }
             }
-        }
 
     }
 
