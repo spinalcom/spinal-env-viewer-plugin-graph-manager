@@ -16,6 +16,7 @@ export default class GraphManager {
                 });
             }
             this.graph = forgeFile.graph;
+            store.dispatch("retrieveGlobalBar", this.graph);
             this.graph.getChildren(['hasContext']).then(children => {
                 let promises = [];
                 for (let i = 0; i < children.length; i++) {
