@@ -1,5 +1,6 @@
 import {SpinalGraph, SpinalContext, GraphFunction} from 'spinalgraph';
 import "./DummyButton.js"
+
 function createDummyContext() {
     const Context = new SpinalContext("DummyContext", "DummyContext");
     Context.addChild(new window.Model(), "has floor")
@@ -16,18 +17,17 @@ export default class GraphManager {
                 });
             }
             this.graph = forgeFile.graph;
-            store.dispatch("retrieveGlobalBar", this.graph);
             this.graph.getChildren(['hasContext']).then(children => {
                 let promises = [];
                 for (let i = 0; i < children.length; i++) {
-                    promises.push(node2display(children[i],children[i]));
+                    promises.push(node2display(children[i], children[i]));
                 }
                 Promise.all(promises).then(result => {
 
                     this.nodes.push(...result);
                     if (this.nodes.length > 0)
                         store.dispatch("addNodes", this.nodes);
-
+                    store.dispatch("retrieveGlobalBar", this.graph);
                 });
             })
         }).bind(this))
@@ -38,7 +38,7 @@ export default class GraphManager {
 
 }
 
-async function transformNode(result, context,node, set) {
+async function transformNode(result, context, node, set) {
 
     if (set.has(node))
         return;
@@ -63,7 +63,6 @@ async function transformNode(result, context,node, set) {
 
     return result;
 }
-
 
 
 function node2display(context, node) {
