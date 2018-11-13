@@ -22,6 +22,7 @@
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
+    "spinal-env-viewer-vue-components-lib":"https://github.com/spinalcom/spinal-env-viewer-vue-components-lib.git",
     "spinal-env-viewer-context-menu-service": "git+https://github.com/spinalcom/spinal-env-viewer-context-menu-service.git",
     "spinal-env-viewer-plugin-graph-manager-vue": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-graph-manager-vue.git",
     "spinalgraph": "git+https://github.com/spinalcom/spinal-model-graph.git"
