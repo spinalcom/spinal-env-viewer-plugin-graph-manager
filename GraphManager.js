@@ -18,21 +18,24 @@ export default class GraphManager {
             }
             this.graph = forgeFile.graph;
             this.graph.getChildren(['hasContext']).then(children => {
-                let promises = [];
-                for (let i = 0; i < children.length; i++) {
-                    promises.push(node2display(children[i], children[i]));
-                }
-                Promise.all(promises).then(result => {
 
-                    this.nodes.push(...result);
-                    if (this.nodes.length > 0)
-                        store.dispatch("addNodes", this.nodes);
-                    store.dispatch("retrieveGlobalBar", this.graph);
-                });
+                this.nodes.push(...children);
+                if (this.nodes.length > 0)
+                    store.dispatch("addContexts", this.nodes);
+                store.dispatch("retrieveGlobalBar", this.graph);
             })
         }).bind(this))
 
-
+        store.subscribe((mutation, state) => {
+            if (mutation.type === "PULL_NODE") {
+                if (state.nodes.hasOwnProperty(mutation.payload))
+                    state.nodes[mutation.payload].getChildren([])
+                        .then(children => {
+                            store.dispatch('addNodes', children);
+                        })
+                        .catch(e => console.error(e));
+            }
+        })
     }
 
 

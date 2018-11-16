@@ -20,7 +20,7 @@ class Button1TopBar extends SpinalContextApp {
         return Promise.resolve(true);
     }
 
-    action() {
+    action(option) {
         console.log("action button1");
     }
 }
@@ -40,7 +40,7 @@ class Button2 extends SpinalContextApp {
         return Promise.resolve(true);
     }
 
-    action() {
+    action(option) {
         console.log("button side bar 1");
     }
 }
@@ -59,7 +59,7 @@ class Button3 extends SpinalContextApp {
         return Promise.resolve(true);
     }
 
-    action() {
+    action(option) {
         console.log("button side bar 2");
     }
 }
