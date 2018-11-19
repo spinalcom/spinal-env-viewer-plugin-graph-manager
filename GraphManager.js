@@ -17,12 +17,14 @@ export default class GraphManager {
                 });
             }
             this.graph = forgeFile.graph;
+
             this.graph.getChildren(['hasContext']).then(children => {
 
                 this.nodes.push(...children);
                 if (this.nodes.length > 0)
                     store.dispatch("addContexts", this.nodes);
                 store.dispatch("retrieveGlobalBar", this.graph);
+                store.dispatch("setGraph", this.graph)
             })
         }).bind(this))
 

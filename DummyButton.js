@@ -21,6 +21,7 @@ class Button1TopBar extends SpinalContextApp {
     }
 
     action(option) {
+        console.log("topBar", option);
         console.log("action button1");
     }
 }
@@ -60,6 +61,8 @@ class Button3 extends SpinalContextApp {
     }
 
     action(option) {
+        console.log("side", option);
+
         console.log("button side bar 2");
     }
 }
