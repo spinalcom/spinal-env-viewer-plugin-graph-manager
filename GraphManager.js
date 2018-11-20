@@ -26,14 +26,15 @@ export default class GraphManager {
                 store.dispatch("retrieveGlobalBar", this.graph);
                 store.dispatch("setGraph", this.graph)
             })
-        }).bind(this))
+        }).bind(this));
 
         store.subscribe((mutation, state) => {
-            if (mutation.type === "PULL_NODE") {
+            if (mutation.type === "PULL_CHILDREN") {
                 if (state.nodes.hasOwnProperty(mutation.payload))
                     state.nodes[mutation.payload].getChildren([])
                         .then(children => {
                             store.dispatch('addNodes', children);
+                            store.dispatch('emptyPoll', mutation.payload)
                         })
                         .catch(e => console.error(e));
             }
