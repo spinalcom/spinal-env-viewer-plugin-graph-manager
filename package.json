@@ -1,6 +1,6 @@
 {
   "name": "spinal-env-viewer-plugin-graph-manager",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "SpinalCom",
   "bugs": {
     "url": "https://github.com/LorisC/graph-manager/issues"
   },
@@ -25,7 +25,7 @@
     "spinal-env-viewer-context-menu-service": "git+https://github.com/spinalcom/spinal-env-viewer-context-menu-service.git",
     "spinal-env-viewer-panel-manager-service": "git+https://github.com/spinalcom/spinal-env-viewer-panel-manager-service.git",
     "spinal-env-viewer-panel-manager-service_spinalforgeextention": "git+https://github.com/spinalcom/spinal-env-viewer-panel-manager-service_spinalforgeextention.git",
-    "spinal-env-viewer-plugin-graph-manager-vue": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-graph-manager-vue.git#v02",
+    "spinal-env-viewer-plugin-graph-manager-vue": "git+https://github.com/spinal-env-viewer-plugin-graph-manager-vue.git#v03",
     "spinalgraph": "git+https://github.com/spinalcom/spinal-model-graph.git#v01"
   }
 }

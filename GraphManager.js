@@ -1,10 +1,4 @@
 import {SpinalGraph, SpinalContext, GraphFunction} from 'spinalgraph';
-import "./DummyButton.js"
-
-function createDummyContext() {
-    const Context = new SpinalContext("DummyContext", "DummyContext");
-    Context.addChild(new window.Model(), "has floor")
-}
 
 export default class GraphManager {
     constructor(store) {
