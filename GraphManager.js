@@ -1,4 +1,6 @@
 import {SpinalGraph, SpinalContext, GraphFunction} from 'spinalgraph';
+import "./Dummy.js"
+
 
 export default class GraphManager {
     constructor(store) {
