@@ -1,10 +1,10 @@
 import {SpinalGraph, SpinalContext, GraphFunction} from 'spinalgraph';
-import "./Dummy.js"
 
 
 export default class GraphManager {
     constructor(store) {
         this.nodes = [];
+        this.store = store;
 
         window.spinal.spinalSystem.getModel().then((function (forgeFile) {
             if (!forgeFile.hasOwnProperty('graph')) {
@@ -24,6 +24,7 @@ export default class GraphManager {
             })
         }).bind(this));
 
+        this.graph.bind(this.graphChange.bind(this));
         store.subscribe((mutation, state) => {
             if (mutation.type === "PULL_CHILDREN") {
                 if (state.nodes.hasOwnProperty(mutation.payload))
@@ -37,6 +38,16 @@ export default class GraphManager {
         })
     }
 
+      graphChange() {
+          this.graph.getChildren(['hasContext']).then(children => {
+
+              this.nodes.push(...children);
+              if (this.nodes.length > 0)
+                  this.store.dispatch("addContexts", this.nodes);
+              this.store.dispatch("retrieveGlobalBar", this.graph);
+              this.store.dispatch("setGraph", this.graph)
+          })
+      }
 
 }
 
