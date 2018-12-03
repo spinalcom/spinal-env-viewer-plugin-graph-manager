@@ -22,7 +22,6 @@ const extentions = SpinalForgeExtention.createExtention({
     },
     onLoad: () => {
         new GraphManagerCo(GraphManagerVue.Store);
-
     }
 });
 SpinalForgeExtention.registerExtention("plugin-graph-manager", extentions);

@@ -1,5 +1,4 @@
-import {SpinalGraph, SpinalContext, GraphFunction} from 'spinalgraph';
-
+import {SpinalGraph} from 'spinalgraph';
 
 export default class GraphManager {
     constructor(store) {
@@ -15,8 +14,13 @@ export default class GraphManager {
             this.graph = forgeFile.graph;
 
             this.graph.getChildren(['hasContext']).then(children => {
-
-                this.nodes.push(...children);
+                for (let i = 0; i < children.length; i++) {
+                    if (children[i].info.name.get() !== 'BIMObjectContext'){
+                        this.nodes.push(children[i])
+                        console.log(children[i].info.name.get(),children[i].info.name.get() === 'BIMObjectContext')
+                    }
+                }
+                console.log(this.nodes)
                 if (this.nodes.length > 0)
                     store.dispatch("addContexts", this.nodes);
                 store.dispatch("retrieveGlobalBar", this.graph);
@@ -42,39 +46,17 @@ export default class GraphManager {
 
     graphChange() {
         this.graph.getChildren(['hasContext']).then(children => {
+            for (let i = 0; i < children.length; i++) {
+                if (children[i].info.name.get() !== 'BIMObjectContext' && !this.nodes.includes(children[i])){
+                    this.nodes.push(children[i])
+                    console.log(children[i].info.name.get(),children[i].info.name.get() === 'BIMObjectContext')
+                }
+            }
 
-            this.nodes.push(...children);
             if (this.nodes.length > 0)
                 this.store.dispatch("addContexts", this.nodes);
             this.store.dispatch("retrieveGlobalBar", this.graph);
             this.store.dispatch("setGraph", this.graph)
         })
     }
-
-}
-
-async function transformNode(result, context, node, set) {
-
-    if (set.has(node))
-        return;
-
-    result['info'] = {};
-    result['children'] = [];
-    result['context'] = {
-        context: context,
-        selectedNode: node
-    };
-
-    if (node.info.hasOwnProperty("name"))
-        result['info']['name'] = node.info.name.get();
-    if (node.info.hasOwnProperty("color"))
-        result['info']['color'] = node.info.color.get();
-
-    let children = await node.getChildren([]);
-    for (let i = 0; i < children.length; i++) {
-        result['children'].push({});
-        result['children'][i] = await transformNode(result['children'][i], context, children[i], set)
-    }
-
-    return result;
 }
