@@ -8,7 +8,7 @@ const extentions = SpinalForgeExtention.createExtention({
     vueMountComponent: GraphManagerVue.Component,
     toolbar: {
         //TODO find proper icon
-        icon: "done",
+        icon: "ballot",
         label: "Graph Manager",
         subToolbarName: "spinalcom"
     },
