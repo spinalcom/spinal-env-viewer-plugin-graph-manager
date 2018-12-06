@@ -20,10 +20,10 @@
   "dependencies": {
     "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
     "spinal-env-viewer-context-menu-service": "git+https://github.com/spinalcom/spinal-env-viewer-context-menu-service.git",
-    "spinal-env-viewer-graph-service": "file:../spinal-env-viewer-graph-service",
+    "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/spinal-env-viewer-graph-service",
     "spinal-env-viewer-panel-manager-service": "git+https://github.com/spinalcom/spinal-env-viewer-panel-manager-service.git",
     "spinal-env-viewer-panel-manager-service_spinalforgeextention": "git+https://github.com/spinalcom/spinal-env-viewer-panel-manager-service_spinalforgeextention.git",
-    "spinal-env-viewer-plugin-graph-manager-vue": "file:../spinal-env-viewer-plugin-graph-manager-vue"
+    "spinal-env-viewer-plugin-graph-manager-vue": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-graph-manager-vue"
   },
   "browserify": {
     "transform": [
