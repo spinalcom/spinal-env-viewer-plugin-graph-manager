@@ -17,7 +17,7 @@ export default class GraphManager {
           store.dispatch( 'emptyPoll', mutation.payload );
 
           if (state.nodes.hasOwnProperty( mutation.payload )) {
-            SpinalGraphService.getChildren( mutation.payload ).then( children => {
+            SpinalGraphService.getChildren( mutation.payload, [] ).then( children => {
               store.dispatch( 'addNodes', children );
             } )
               .catch( e => console.error( e ) );
@@ -29,6 +29,7 @@ export default class GraphManager {
       }
     );
 
+    this.stopListening = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) )
   }
 
   getContext( store, children ) {
@@ -37,6 +38,7 @@ export default class GraphManager {
         this.nodes.push( children[i] );
       }
     }
+
     store.dispatch( "retrieveGlobalBar", this.graph );
     store.dispatch( "setGraph", this.graph );
   }
@@ -56,5 +58,9 @@ export default class GraphManager {
       this.store.dispatch( "retrieveGlobalBar", this.graph );
       this.store.dispatch( "setGraph", this.graph );
     } );
+  }
+
+  onNodeAdded( nodeId ) {
+    this.store.dispatch( 'addNodes', SpinalGraphService.getRealNode( nodeId ) );
   }
 }
