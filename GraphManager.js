@@ -26,10 +26,6 @@ export default class GraphManager {
         if (mutation.type === 'BIND_NODE') {
           SpinalGraphService.bindNode( mutation.payload.nodeId, this, mutation.payload.func );
         }
-        if (mutation.type === "CHANGE_SELECTED_NODE") {
-          console.log( 'Selected node paylod', mutation );
-        }
-
       }
     );
 
@@ -47,10 +43,8 @@ export default class GraphManager {
 
 
   graphChange() {
-    console.log( "grq", this.graph );
     SpinalGraphService.getChildren( this.graphId, ['hasContext'] ).then( children => {
       for (let i = 0; i < children.length; i++) {
-        console.log( 'graph change', children );
         if (children[i].name.get() !== 'BIMObjectContext' && !this.nodes.includes( children[i] )) {
           this.nodes.push( children[i] );
         }
