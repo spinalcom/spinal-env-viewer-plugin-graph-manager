@@ -9,7 +9,7 @@ export default class GraphManager {
     this.store.subscribe( ( mutation, state ) => {
       if (mutation.type === "PULL_CHILDREN") {
         this.store.dispatch( 'emptyPoll', mutation.payload );
-
+        this.store.commit( 'SET_NODE_ID', SpinalGraphService.getInfo( mutation.payload ) );
         if (state.nodes.hasOwnProperty( mutation.payload )) {
           SpinalGraphService
             .getChildren( mutation.payload, [] )
@@ -41,7 +41,6 @@ export default class GraphManager {
     this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange.bind( this ) );
     this.stopListening = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
     const nodes = SpinalGraphService.getNodes();
-    console.log( nodes );
     for (let key in nodes) {
       if (nodes.hasOwnProperty( key )) {
         this.store.commit( 'ADD_NODE', SpinalGraphService.getInfo( nodes[key].getId().get() ) );
@@ -78,7 +77,8 @@ export default class GraphManager {
     store.dispatch( "setGraph", this.graph );
   }
 
-  bindNode( id, ) {
+  bindNode( id ) {
+    console.log( id, SpinalGraphService.getInfo( id.get() ) );
     SpinalGraphService.getChildren( id, [] ).then( children => {
       for (let i = 0; i < children.length; i++) {
         if (!this.nodes.includes( children[i] )) {
