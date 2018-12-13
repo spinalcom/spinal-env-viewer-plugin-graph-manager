@@ -6,30 +6,65 @@ export default class GraphManager {
     this.store = store;
     this.graph = SpinalGraphService.getGraph();
     this.graphId = SpinalGraphService.getGraph().info.id.get();
-    SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
-      .then( children => this.getContext( store, children ) )
-      .catch( e => console.error( e, SpinalGraphService ) );
+    this.store.subscribe( ( mutation, state ) => {
+      if (mutation.type === "PULL_CHILDREN") {
+        this.store.dispatch( 'emptyPoll', mutation.payload );
 
-    this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange.bind( this ) );
-
-    store.subscribe( ( mutation, state ) => {
-        if (mutation.type === "PULL_CHILDREN") {
-          store.dispatch( 'emptyPoll', mutation.payload );
-
-          if (state.nodes.hasOwnProperty( mutation.payload )) {
-            SpinalGraphService.getChildren( mutation.payload, [] ).then( children => {
-              store.dispatch( 'addNodes', children );
-            } )
-              .catch( e => console.error( e ) );
-          }
-        }
-        if (mutation.type === 'BIND_NODE') {
-          SpinalGraphService.bindNode( mutation.payload.nodeId, this, mutation.payload.func );
+        if (state.nodes.hasOwnProperty( mutation.payload )) {
+          SpinalGraphService
+            .getChildren( mutation.payload, [] )
+            .then( children => { this.store.dispatch( 'addNodes', children ); } )
+            .catch( e => console.error( e ) );
         }
       }
-    );
+      if (mutation.type === 'BIND_NODE') {
+        SpinalGraphService.bindNode( mutation.payload.nodeId, this, mutation.payload.func );
+      }
 
-    this.stopListening = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) )
+      if (mutation.type === 'RESET') {
+        this.reset();
+      }
+    } );
+    this.init();
+  }
+
+  reset() {
+
+    if (typeof this.unbind === "function") {
+      this.unbind();
+    }
+
+    if (typeof this.stopListening === 'function') {
+      this.stopListening();
+    }
+
+    this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange.bind( this ) );
+    this.stopListening = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
+    const nodes = SpinalGraphService.getNodes();
+    console.log( nodes );
+    for (let key in nodes) {
+      if (nodes.hasOwnProperty( key )) {
+        this.store.commit( 'ADD_NODE', SpinalGraphService.getInfo( nodes[key].getId().get() ) );
+      }
+    }
+    SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
+      .then( children => {
+        this.getContext( this.store, children );
+        this.store.commit( 'SET_RESET', true );
+
+      } )
+      .catch( e => console.error( e, SpinalGraphService ) );
+
+  }
+
+  init() {
+
+    this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange.bind( this ) );
+    this.stopListening = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
+
+    SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
+      .then( children => this.getContext( this.store, children ) )
+      .catch( e => console.error( e, SpinalGraphService ) );
   }
 
   getContext( store, children ) {
@@ -43,11 +78,27 @@ export default class GraphManager {
     store.dispatch( "setGraph", this.graph );
   }
 
+  bindNode( id, ) {
+    SpinalGraphService.getChildren( id, [] ).then( children => {
+      for (let i = 0; i < children.length; i++) {
+        if (!this.nodes.includes( children[i] )) {
+
+          SpinalGraphService.bindNode( children[i].id.get(), this, this.bindNode.bind( this, children[i].id.get() ) );
+          this.nodes.push( children[i] );
+        }
+      }
+
+      if (this.nodes.length > 0) {
+        this.store.dispatch( "addNodes", this.nodes );
+      }
+    } );
+  }
 
   graphChange() {
     SpinalGraphService.getChildren( this.graphId, ['hasContext'] ).then( children => {
       for (let i = 0; i < children.length; i++) {
         if (children[i].name.get() !== 'BIMObjectContext' && !this.nodes.includes( children[i] )) {
+          SpinalGraphService.bindNode( children[i].id.get(), this, this.bindNode.bind( this, children[i].id.get() ) );
           this.nodes.push( children[i] );
         }
       }
