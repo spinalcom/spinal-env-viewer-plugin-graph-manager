@@ -1,6 +1,6 @@
 import GraphManagerVue from "spinal-env-viewer-plugin-graph-manager-vue";
 import GraphManagerCo from "./GraphManager.js";
-import {SpinalForgeExtention} from "spinal-env-viewer-panel-manager-service_spinalforgeextention";
+import { SpinalForgeExtention } from "spinal-env-viewer-panel-manager-service_spinalforgeextention";
 
 
 const extentions = SpinalForgeExtention.createExtention({
@@ -8,7 +8,7 @@ const extentions = SpinalForgeExtention.createExtention({
   vueMountComponent: GraphManagerVue.Component,
   toolbar: {
     //TODO find proper icon
-    icon: "view_compact",
+    icon: "ballot",
     label: "Graph Manager",
     subToolbarName: "spinalcom"
   },
