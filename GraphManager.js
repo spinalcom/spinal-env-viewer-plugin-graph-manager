@@ -34,18 +34,24 @@ export default class GraphManager {
       this.unbind();
     }
 
-    if (typeof this.stopListening === 'function') {
-      this.stopListening();
+    if (typeof this.stopListeningOnNodeAdded === 'function') {
+      this.stopListeningOnNodeAdded();
     }
 
+    if (typeof this.stopListeningOnNodeRemove === "function") {
+      this.stopListeningOnNodeRemove();
+    }
     this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange.bind( this ) );
-    this.stopListening = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
+    this.stopListeningOnNodeAdded = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
+    this.stopListeningOnNodeRemove = SpinalGraphService.listenOnNodeRemove( this, this.removeNode.bind( this ) );
+
     const nodes = SpinalGraphService.getNodes();
     for (let key in nodes) {
       if (nodes.hasOwnProperty( key )) {
         this.store.commit( 'ADD_NODE', SpinalGraphService.getInfo( nodes[key].getId().get() ) );
       }
     }
+
     SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
       .then( children => {
         this.getContext( this.store, children );
@@ -57,10 +63,9 @@ export default class GraphManager {
   }
 
   init() {
-
     this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange.bind( this ) );
-    this.stopListening = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
-
+    this.stopListeningOnNodeAdded = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
+    this.stopListeningOnNodeRemove = SpinalGraphService.listenOnNodeRemove( this, this.removeNode.bind( this ) );
     SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
       .then( children => this.getContext( this.store, children ) )
       .catch( e => console.error( e, SpinalGraphService ) );
@@ -78,7 +83,6 @@ export default class GraphManager {
   }
 
   bindNode( id ) {
-    console.log( id, SpinalGraphService.getInfo( id.get() ) );
     SpinalGraphService.getChildren( id, [] ).then( children => {
       for (let i = 0; i < children.length; i++) {
         if (!this.nodes.includes( children[i] )) {
@@ -113,5 +117,9 @@ export default class GraphManager {
 
   onNodeAdded( nodeId ) {
     this.store.dispatch( 'addNodes', SpinalGraphService.getRealNode( nodeId ) );
+  }
+
+  removeNode( nodeId ) {
+    this.store.commit( 'REMOVE_NODE', nodeId );
   }
 }
