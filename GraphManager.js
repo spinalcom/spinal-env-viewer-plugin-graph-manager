@@ -28,21 +28,21 @@ export default class GraphManager {
   constructor( store ) {
     this.nodes = {};
     this.contexts = {};
-  
+
     this.bindNode = (function ( node ) {
       this.store.commit( "SET_NODE", node );
-    
+
       SpinalGraphService.getChildren( node.id.get(), [] )
         .then( children => {
           this.store.commit( 'ADD_NODES', children );
         } );
-    
+
     }).bind( this );
     this.onNodeAdded = (function ( nodeId ) {
       const node = SpinalGraphService.getNode( nodeId );
       SpinalGraphService.bindNode( nodeId, this, this.bindNode );
       this.store.commit( 'ADD_NODE', node );
-    
+
       SpinalGraphService.getChildren( nodeId, [] ).then( children => {
         this.store.commit( 'ADD_NODES', children );
       } );
@@ -53,8 +53,8 @@ export default class GraphManager {
     this.graphChange = (function () {
       SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
         .then( contexts => {
-        
-        
+  
+  
           for (let i = 0; i < contexts.length; i++) {
             const contextId = contexts[i].id.get();
             if (!this.contexts.hasOwnProperty( contextId )) {
@@ -62,11 +62,11 @@ export default class GraphManager {
               SpinalGraphService.bindNode( contextId, this, this.bindNode );
             }
           }
-        
+
           this.store.commit( 'ADD_CONTEXTS', contexts );
-        
+
         } );
-    
+  
     }).bind( this );
 
     this.store = store;
@@ -81,7 +81,7 @@ export default class GraphManager {
           && typeof mutation.payload !== "undefined"
           && !this.nodes.hasOwnProperty( mutation.payload )
         ) {
-        
+      
           const nodeId = mutation.payload;
           const node = SpinalGraphService.getNode( nodeId );
           if (typeof node !== "undefined") {
@@ -94,7 +94,7 @@ export default class GraphManager {
             );
           } else {
             SpinalGraphService.findNode( nodeId ).then( node => {
-            
+          
               this.store.commit( 'ADD_NODE', node );
               SpinalGraphService.getChildren( nodeId, [] ).then(
                 children => {
@@ -131,7 +131,7 @@ export default class GraphManager {
     }
   
     this.init().then( () => this.store.commit( 'REFRESHED' ) );
-    
+  
   }
 
   init() {
@@ -149,10 +149,16 @@ export default class GraphManager {
   }
   
   addContexts( contexts ) {
+    const tmp = [];
     for (let i = 0; i < contexts.length; i++) {
       const contextId = contexts[i].id.get();
-      if (!this.contexts.hasOwnProperty( contextId )) {
+      if (
+        (!this.contexts.hasOwnProperty( contextId ))
+        && (contexts[i].name.get().indexOf( '.' ) !== 0)
+        && !(contexts[i].name.get().includes( 'BIMObjectContext' ))
+      ) {
         this.contexts[contextId] = contexts[i];
+        tmp.push( contexts[i] );
         SpinalGraphService.bindNode( contextId, this, this.bindNode );
       }
     }
