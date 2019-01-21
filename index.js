@@ -22,14 +22,17 @@
  *  <http://resources.spinalcom.com/licenses.pdf>.
  */
 
-import GraphManagerVue from "spinal-env-viewer-plugin-graph-manager-vue";
-import GraphManagerCo from "./GraphManager.js";
+import {
+  GraphManagerVue,
+  Store
+} from "spinal-env-viewer-plugin-graph-manager-vue";
+import GraphManager from "./GraphManager.js";
 import { SpinalForgeExtention } from "spinal-env-viewer-panel-manager-service_spinalforgeextention";
 
 
 const extentions = SpinalForgeExtention.createExtention({
   name: "plugin-graph-manager",
-  vueMountComponent: GraphManagerVue.Component,
+  vueMountComponent: GraphManagerVue,
   toolbar: {
     icon: "ballot",
     label: "Graph Manager",
@@ -44,7 +47,7 @@ const extentions = SpinalForgeExtention.createExtention({
     height: '80vh'
   },
   onLoad: () => {
-    new GraphManagerCo(GraphManagerVue.Store);
+    new GraphManager( Store );
   }
 });
 SpinalForgeExtention.registerExtention("plugin-graph-manager", extentions);

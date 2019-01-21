@@ -1,30 +1,111 @@
+/*
+ * Copyright 2019 SpinalCom - www.spinalcom.com
+ *
+ *  This file is part of SpinalCore.
+ *
+ *  Please read all of the following terms and conditions
+ *  of the Free Software license Agreement ("Agreement")
+ *  carefully.
+ *
+ *  This Agreement is a legally binding contract between
+ *  the Licensee (as defined below) and SpinalCom that
+ *  sets forth the terms and conditions that govern your
+ *  use of the Program. By installing and/or using the
+ *  Program, you agree to abide by all the terms and
+ *  conditions stated or referenced herein.
+ *
+ *  If you do not agree to abide by these terms and
+ *  conditions, do not demonstrate your acceptance and do
+ *  not install or use the Program.
+ *  You should have received a copy of the license along
+ *  with this file. If not, see
+ *  <http://resources.spinalcom.com/licenses.pdf>.
+ */
+
 import { SpinalGraphService } from "spinal-env-viewer-graph-service";
 
 export default class GraphManager {
   constructor( store ) {
-    this.nodes = [];
+    this.nodes = {};
+    this.contexts = {};
+  
+    this.bindNode = (function ( node ) {
+      this.store.commit( "SET_NODE", node );
+    
+      SpinalGraphService.getChildren( node.id.get(), [] )
+        .then( children => {
+          this.store.commit( 'ADD_NODES', children );
+        } );
+    
+    }).bind( this );
+    this.onNodeAdded = (function ( nodeId ) {
+      const node = SpinalGraphService.getNode( nodeId );
+      SpinalGraphService.bindNode( nodeId, this, this.bindNode );
+      this.store.commit( 'ADD_NODE', node );
+    
+      SpinalGraphService.getChildren( nodeId, [] ).then( children => {
+        this.store.commit( 'ADD_NODES', children );
+      } );
+    }).bind( this );
+    this.removeNode = (function ( nodeId ) {
+      this.store.commit( 'REMOVE_NODE', nodeId );
+    }).bind( this );
+    this.graphChange = (function () {
+      SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
+        .then( contexts => {
+        
+        
+          for (let i = 0; i < contexts.length; i++) {
+            const contextId = contexts[i].id.get();
+            if (!this.contexts.hasOwnProperty( contextId )) {
+              this.contexts[contextId] = contexts[i];
+              SpinalGraphService.bindNode( contextId, this, this.bindNode );
+            }
+          }
+        
+          this.store.commit( 'ADD_CONTEXTS', contexts );
+        
+        } );
+    
+    }).bind( this );
+
     this.store = store;
     this.graph = SpinalGraphService.getGraph();
-    this.graphId = SpinalGraphService.getGraph().info.id.get();
-    this.store.subscribe( ( mutation, state ) => {
-      if (mutation.type === "PULL_CHILDREN") {
-        this.store.dispatch( 'emptyPoll', mutation.payload );
-        this.store.commit( 'SET_NODE_ID', SpinalGraphService.getInfo( mutation.payload ) );
-        if (state.nodes.hasOwnProperty( mutation.payload )) {
-          SpinalGraphService
-            .getChildren( mutation.payload, [] )
-            .then( children => { this.store.dispatch( 'addNodes', children ); } )
-            .catch( e => console.error( e ) );
-        }
-      }
-      if (mutation.type === 'BIND_NODE') {
-        SpinalGraphService.bindNode( mutation.payload.nodeId, this, mutation.payload.func );
-      }
-
-      if (mutation.type === 'RESET') {
+    this.graphId = this.graph.getId().get();
+    this.store.subscribe( ( mutation ) => {
+        if (mutation.type === 'REFRESH') {
         this.reset();
       }
-    } );
+        if (
+          mutation.type === 'GET_NODE'
+          && typeof mutation.payload !== "undefined"
+          && !this.nodes.hasOwnProperty( mutation.payload )
+        ) {
+        
+          const nodeId = mutation.payload;
+          const node = SpinalGraphService.getNode( nodeId );
+          if (typeof node !== "undefined") {
+            this.nodes[mutation.payload] = node;
+            this.store.commit( 'ADD_NODE', node );
+            SpinalGraphService.getChildren( nodeId, [] ).then(
+              children => {
+                this.store.commit( 'ADD_NODES', children );
+              }
+            );
+          } else {
+            SpinalGraphService.findNode( nodeId ).then( node => {
+            
+              this.store.commit( 'ADD_NODE', node );
+              SpinalGraphService.getChildren( nodeId, [] ).then(
+                children => {
+                  this.store.commit( 'ADD_NODES', children );
+                }
+              );
+            } );
+          }
+        }
+      }
+    );
     this.init();
   }
 
@@ -41,85 +122,42 @@ export default class GraphManager {
     if (typeof this.stopListeningOnNodeRemove === "function") {
       this.stopListeningOnNodeRemove();
     }
-    this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange.bind( this ) );
-    this.stopListeningOnNodeAdded = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
-    this.stopListeningOnNodeRemove = SpinalGraphService.listenOnNodeRemove( this, this.removeNode.bind( this ) );
-
     const nodes = SpinalGraphService.getNodes();
+
     for (let key in nodes) {
       if (nodes.hasOwnProperty( key )) {
         this.store.commit( 'ADD_NODE', SpinalGraphService.getInfo( nodes[key].getId().get() ) );
       }
     }
-
-    SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
-      .then( children => {
-        this.getContext( this.store, children );
-        this.store.commit( 'SET_RESET', true );
-
-      } )
-      .catch( e => console.error( e, SpinalGraphService ) );
-
+  
+    this.init().then( () => this.store.commit( 'REFRESHED' ) );
+    
   }
 
   init() {
-    this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange.bind( this ) );
-    this.stopListeningOnNodeAdded = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded.bind( this ) );
-    this.stopListeningOnNodeRemove = SpinalGraphService.listenOnNodeRemove( this, this.removeNode.bind( this ) );
-    SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
-      .then( children => this.getContext( this.store, children ) )
+    this.stopListeningOnNodeAdded = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded );
+    this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange );
+    this.stopListeningOnNodeRemove = SpinalGraphService.listenOnNodeRemove( this, this.removeNode );
+    this.nodes = {};
+  
+    this.store.dispatch( "retrieveGlobalBar", this.graph );
+    this.store.commit( "SET_GRAPH", this.graph );
+    return SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
+      .then( children => this.addContexts( children ) )
       .catch( e => console.error( e, SpinalGraphService ) );
-  }
 
-  getContext( store, children ) {
-    for (let i = 0; i < children.length; i++) {
-      if (children[i].name.get() !== 'BIMObjectContext') {
-        this.nodes.push( children[i] );
+  }
+  
+  addContexts( contexts ) {
+    for (let i = 0; i < contexts.length; i++) {
+      const contextId = contexts[i].id.get();
+      if (!this.contexts.hasOwnProperty( contextId )) {
+        this.contexts[contextId] = contexts[i];
+        SpinalGraphService.bindNode( contextId, this, this.bindNode );
       }
     }
-
-    store.dispatch( "retrieveGlobalBar", this.graph );
-    store.dispatch( "setGraph", this.graph );
+    
+    this.store.commit( 'ADD_CONTEXTS', contexts );
   }
 
-  bindNode( id ) {
-    SpinalGraphService.getChildren( id, [] ).then( children => {
-      for (let i = 0; i < children.length; i++) {
-        if (!this.nodes.includes( children[i] )) {
-
-          SpinalGraphService.bindNode( children[i].id.get(), this, this.bindNode.bind( this, children[i].id.get() ) );
-          this.nodes.push( children[i] );
-        }
-      }
-
-      if (this.nodes.length > 0) {
-        this.store.dispatch( "addNodes", this.nodes );
-      }
-    } );
-  }
-
-  graphChange() {
-    SpinalGraphService.getChildren( this.graphId, ['hasContext'] ).then( children => {
-      for (let i = 0; i < children.length; i++) {
-        if (children[i].name.get() !== 'BIMObjectContext' && !this.nodes.includes( children[i] )) {
-          SpinalGraphService.bindNode( children[i].id.get(), this, this.bindNode.bind( this, children[i].id.get() ) );
-          this.nodes.push( children[i] );
-        }
-      }
-
-      if (this.nodes.length > 0) {
-        this.store.dispatch( "addContexts", this.nodes );
-      }
-      this.store.dispatch( "retrieveGlobalBar", this.graph );
-      this.store.dispatch( "setGraph", this.graph );
-    } );
-  }
-
-  onNodeAdded( nodeId ) {
-    this.store.dispatch( 'addNodes', SpinalGraphService.getRealNode( nodeId ) );
-  }
-
-  removeNode( nodeId ) {
-    this.store.commit( 'REMOVE_NODE', nodeId );
-  }
 }
