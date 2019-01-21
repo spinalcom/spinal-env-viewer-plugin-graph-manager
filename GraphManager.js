@@ -62,9 +62,8 @@ export default class GraphManager {
               SpinalGraphService.bindNode( contextId, this, this.bindNode );
             }
           }
-
-          this.store.commit( 'ADD_CONTEXTS', contexts );
-
+  
+          this.addContexts( contexts );
         } );
   
     }).bind( this );
@@ -162,8 +161,8 @@ export default class GraphManager {
         SpinalGraphService.bindNode( contextId, this, this.bindNode );
       }
     }
-    
-    this.store.commit( 'ADD_CONTEXTS', contexts );
+  
+    this.store.commit( 'ADD_CONTEXTS', tmp );
   }
 
 }
