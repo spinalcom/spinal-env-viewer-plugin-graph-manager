@@ -53,19 +53,23 @@ export default class GraphManager {
     this.graphChange = (function () {
       SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
         .then( contexts => {
-  
-  
+          const tmp = [];
           for (let i = 0; i < contexts.length; i++) {
             const contextId = contexts[i].id.get();
-            if (!this.contexts.hasOwnProperty( contextId )) {
+            if (
+              (!this.contexts.hasOwnProperty( contextId ))
+              && (contexts[i].name.get().indexOf( '.' ) !== 0)
+              && !(contexts[i].name.get().includes( 'BIMObjectContext' ))
+            ) {
               this.contexts[contextId] = contexts[i];
+              tmp.push( contexts[i] );
               SpinalGraphService.bindNode( contextId, this, this.bindNode );
             }
           }
   
-          this.addContexts( contexts );
+          this.store.commit( 'ADD_CONTEXTS', tmp );
         } );
-  
+
     }).bind( this );
 
     this.store = store;
@@ -142,27 +146,25 @@ export default class GraphManager {
     this.store.dispatch( "retrieveGlobalBar", this.graph );
     this.store.commit( "SET_GRAPH", this.graph );
     return SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
-      .then( children => this.addContexts( children ) )
+      .then( contexts => {
+        const tmp = [];
+        for (let i = 0; i < contexts.length; i++) {
+          const contextId = contexts[i].id.get();
+          if (
+            (!this.contexts.hasOwnProperty( contextId ))
+            && (contexts[i].name.get().indexOf( '.' ) !== 0)
+            && !(contexts[i].name.get().includes( 'BIMObjectContext' ))
+          ) {
+            this.contexts[contextId] = contexts[i];
+            tmp.push( contexts[i] );
+            SpinalGraphService.bindNode( contextId, this, this.bindNode );
+          }
+        }
+    
+        this.store.commit( 'ADD_CONTEXTS', tmp );
+      } )
       .catch( e => console.error( e, SpinalGraphService ) );
 
-  }
-  
-  addContexts( contexts ) {
-    const tmp = [];
-    for (let i = 0; i < contexts.length; i++) {
-      const contextId = contexts[i].id.get();
-      if (
-        (!this.contexts.hasOwnProperty( contextId ))
-        && (contexts[i].name.get().indexOf( '.' ) !== 0)
-        && !(contexts[i].name.get().includes( 'BIMObjectContext' ))
-      ) {
-        this.contexts[contextId] = contexts[i];
-        tmp.push( contexts[i] );
-        SpinalGraphService.bindNode( contextId, this, this.bindNode );
-      }
-    }
-  
-    this.store.commit( 'ADD_CONTEXTS', tmp );
   }
 
 }
