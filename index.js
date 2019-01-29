@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * Copyright 2019 SpinalCom - www.spinalcom.com
  *
@@ -28,10 +27,6 @@ import {
   Store
 } from "spinal-env-viewer-plugin-graph-manager-vue";
 import GraphManager from "./GraphManager.js";
-=======
-import GraphManagerVue from "spinal-env-viewer-plugin-graph-manager-vue";
-import GraphManagerCo from "./GraphManager.js";
->>>>>>> parent of 1925aeab... [UPDATE]
 import { SpinalForgeExtention } from "spinal-env-viewer-panel-manager-service_spinalforgeextention";
 
 
@@ -39,7 +34,6 @@ const extentions = SpinalForgeExtention.createExtention({
   name: "plugin-graph-manager",
   vueMountComponent: GraphManagerVue,
   toolbar: {
-    //TODO find proper icon
     icon: "ballot",
     label: "Graph Manager",
     subToolbarName: "spinalcom"
