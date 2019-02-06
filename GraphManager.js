@@ -31,8 +31,9 @@ export default class GraphManager {
 
     this.bindNode = (function ( node ) {
       this.store.commit( "SET_NODE", node );
-
-      SpinalGraphService.getChildren( node.id.get(), [] )
+  
+      SpinalGraphService
+        .getChildren( node.id.get(), [] )
         .then( children => {
           this.store.commit( 'ADD_NODES', children );
         } );
@@ -66,7 +67,7 @@ export default class GraphManager {
               SpinalGraphService.bindNode( contextId, this, this.bindNode );
             }
           }
-  
+
           this.store.commit( 'ADD_CONTEXTS', tmp );
         } );
 
@@ -125,26 +126,24 @@ export default class GraphManager {
     if (typeof this.stopListeningOnNodeRemove === "function") {
       this.stopListeningOnNodeRemove();
     }
-    const nodes = SpinalGraphService.getNodes();
-
-    for (let key in nodes) {
-      if (nodes.hasOwnProperty( key )) {
-        this.store.commit( 'ADD_NODE', SpinalGraphService.getInfo( nodes[key].getId().get() ) );
-      }
-    }
   
+  
+    this.setNodes();
     this.init().then( () => this.store.commit( 'REFRESHED' ) );
-  
+
   }
 
   init() {
     this.stopListeningOnNodeAdded = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded );
-    this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange );
     this.stopListeningOnNodeRemove = SpinalGraphService.listenOnNodeRemove( this, this.removeNode );
+
+    this.unbind = SpinalGraphService.bindNode( this.graphId, this, this.graphChange );
     this.nodes = {};
   
     this.store.dispatch( "retrieveGlobalBar", this.graph );
     this.store.commit( "SET_GRAPH", this.graph );
+    this.setNodes();
+    
     return SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
       .then( contexts => {
         const tmp = [];
@@ -160,11 +159,18 @@ export default class GraphManager {
             SpinalGraphService.bindNode( contextId, this, this.bindNode );
           }
         }
-    
         this.store.commit( 'ADD_CONTEXTS', tmp );
       } )
       .catch( e => console.error( e, SpinalGraphService ) );
-
   }
-
+  
+  setNodes() {
+    const nodes = SpinalGraphService.getNodes();
+    
+    for (let key in nodes) {
+      if (nodes.hasOwnProperty( key )) {
+        this.store.commit( 'ADD_NODE', SpinalGraphService.getInfo( nodes[key].getId().get() ) );
+      }
+    }
+  }
 }
