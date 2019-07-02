@@ -29,7 +29,7 @@ import { spinalContextMenuService } from "spinal-env-viewer-context-menu-service
 import {
   OPTION_CONTEXT_INFO,
   OPTION_SELECTED_NODE_INFO
-} from './config.js';
+} from './constantes.js';
 import { SpinalGraphService } from "spinal-env-viewer-graph-service";
 
 Vue.config.productionTip = false;

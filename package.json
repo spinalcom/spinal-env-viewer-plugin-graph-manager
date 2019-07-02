@@ -21,15 +21,13 @@
     "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
     "spinal-env-viewer-context-menu-service": "git+https://github.com/spinalcom/spinal-env-viewer-context-menu-service.git",
     "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
-    "spinal-env-viewer-panel-manager-service": "git+https://github.com/spinalcom/spinal-env-viewer-panel-manager-service.git",
-    "spinal-env-viewer-panel-manager-service_spinalforgeextention": "git+https://github.com/spinalcom/spinal-env-viewer-panel-manager-service_spinalforgeextention.git",
-    "spinal-env-viewer-plugin-graph-manager-vue": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-graph-manager-vue.git"
+    "vue": "^2.6.10",
+    "vuex": "^3.1.1"
   },
   "browserify": {
     "transform": [
       "vueify",
       "babelify"
-
     ]
   }
 }
