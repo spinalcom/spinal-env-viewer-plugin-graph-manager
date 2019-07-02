@@ -27,7 +27,12 @@ import {
   Store
 } from "./src/vue";
 import GraphManager from "./src/GraphManager.js";
+import Vue from "vue";
 
+new Vue({
+  render: h=> h (GraphManagerVue),
+  mounted: () => new GraphManager(Store)
+}).$mount("#graph-manager-side");
 export {
   GraphManagerVue,
   Store,
