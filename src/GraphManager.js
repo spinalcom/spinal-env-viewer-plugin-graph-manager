@@ -72,45 +72,15 @@ export default class GraphManager {
         } );
 
     }).bind( this );
-
     this.store = store;
-    this.graph = SpinalGraphService.getGraph();
-    this.graphId = this.graph.getId().get();
-    this.store.subscribe( ( mutation ) => {
-        if (mutation.type === 'REFRESH') {
-        this.reset();
-      }
-        if (
-          mutation.type === 'GET_NODE'
-          && typeof mutation.payload !== "undefined"
-          && !this.nodes.hasOwnProperty( mutation.payload )
-        ) {
-      
-          const nodeId = mutation.payload;
-          const node = SpinalGraphService.getNode( nodeId );
-          if (typeof node !== "undefined") {
-            this.nodes[mutation.payload] = node;
-            this.store.commit( 'ADD_NODE', node );
-            SpinalGraphService.getChildren( nodeId, [] ).then(
-              children => {
-                this.store.commit( 'ADD_NODES', children );
-              }
-            );
-          } else {
-            SpinalGraphService.findNode( nodeId ).then( node => {
-          
-              this.store.commit( 'ADD_NODE', node );
-              SpinalGraphService.getChildren( nodeId, [] ).then(
-                children => {
-                  this.store.commit( 'ADD_NODES', children );
-                }
-              );
-            } );
-          }
-        }
-      }
-    );
-    this.init();
+  
+     SpinalGraphService.waitForInitialization().then(()=> {
+      this.graph = SpinalGraphService.getGraph();
+      this.graphId = this.graph.getId().get();
+      this.init();
+    });
+  
+    
   }
 
   reset() {
@@ -134,6 +104,40 @@ export default class GraphManager {
   }
 
   init() {
+  
+    this.store.subscribe( ( mutation ) => {
+        if (mutation.type === 'REFRESH') {
+          this.reset();
+        }
+        if (
+          mutation.type === 'GET_NODE'
+          && typeof mutation.payload !== "undefined"
+          && !this.nodes.hasOwnProperty( mutation.payload )
+        ) {
+        
+          const nodeId = mutation.payload;
+          const node = SpinalGraphService.getNode( nodeId );
+          if (typeof node !== "undefined") {
+            this.nodes[mutation.payload] = node;
+            this.store.commit( 'ADD_NODE', node );
+            SpinalGraphService.getChildren( nodeId, [] ).then(
+              children => {
+                this.store.commit( 'ADD_NODES', children );
+              }
+            );
+          } else {
+            SpinalGraphService.findNode( nodeId ).then( node => {
+            
+              this.store.commit( 'ADD_NODE', node );
+              SpinalGraphService.getChildren( nodeId, [] ).then(
+                children => {
+                  this.store.commit( 'ADD_NODES', children );
+                }
+              );
+            } );
+          }
+        }
+      } );
     this.stopListeningOnNodeAdded = SpinalGraphService.listenOnNodeAdded( this, this.onNodeAdded );
     this.stopListeningOnNodeRemove = SpinalGraphService.listenOnNodeRemove( this, this.removeNode );
 
