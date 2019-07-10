@@ -31,22 +31,11 @@ export default class GraphManager {
 
     this.bindNode = (function ( node ) {
       this.store.commit( "SET_NODE", node );
-  
-      SpinalGraphService
-        .getChildren( node.id.get(), [] )
-        .then( children => {
-          this.store.commit( 'ADD_NODES', children );
-        } );
-
     }).bind( this );
     this.onNodeAdded = (function ( nodeId ) {
       const node = SpinalGraphService.getNode( nodeId );
       SpinalGraphService.bindNode( nodeId, this, this.bindNode );
       this.store.commit( 'ADD_NODE', node );
-
-      SpinalGraphService.getChildren( nodeId, [] ).then( children => {
-        this.store.commit( 'ADD_NODES', children );
-      } );
     }).bind( this );
     this.removeNode = (function ( nodeId ) {
       this.store.commit( 'REMOVE_NODE', nodeId );
