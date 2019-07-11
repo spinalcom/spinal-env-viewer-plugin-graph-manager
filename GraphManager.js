@@ -43,7 +43,6 @@ export default class GraphManager {
     this.graphChange = (function () {
       SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
         .then( contexts => {
-          const tmp = [];
           for (let i = 0; i < contexts.length; i++) {
             const contextId = contexts[i].id.get();
             if (
@@ -52,12 +51,11 @@ export default class GraphManager {
               && !(contexts[i].name.get().includes( 'BIMObjectContext' ))
             ) {
               this.contexts[contextId] = contexts[i];
-              tmp.push( contexts[i] );
               SpinalGraphService.bindNode( contextId, this, this.bindNode );
             }
           }
 
-          this.store.commit( 'ADD_CONTEXTS', tmp );
+          this.store.commit('UPDATE_CONTEXTS', contexts);
         } );
 
     }).bind( this );
@@ -135,7 +133,6 @@ export default class GraphManager {
     
     return SpinalGraphService.getChildren( this.graphId, ['hasContext'] )
       .then( contexts => {
-        const tmp = [];
         for (let i = 0; i < contexts.length; i++) {
           const contextId = contexts[i].id.get();
           if (
@@ -144,11 +141,10 @@ export default class GraphManager {
             && !(contexts[i].name.get().includes( 'BIMObjectContext' ))
           ) {
             this.contexts[contextId] = contexts[i];
-            tmp.push( contexts[i] );
             SpinalGraphService.bindNode( contextId, this, this.bindNode );
           }
         }
-        this.store.commit( 'ADD_CONTEXTS', tmp );
+          this.store.commit('UPDATE_CONTEXTS', contexts);
       } )
       .catch( e => console.error( e, SpinalGraphService ) );
   }
