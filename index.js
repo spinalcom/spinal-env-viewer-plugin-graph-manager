@@ -33,8 +33,4 @@ new Vue({
   render: h=> h (GraphManagerVue),
   mounted: () => new GraphManager(Store)
 }).$mount("#graph-manager-side");
-export {
-  GraphManagerVue,
-  Store,
-  GraphManager
-}
+

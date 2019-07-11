@@ -23,7 +23,7 @@
   -->
 
 <template>
-    <div class="plugin-graph-viewer" :style="{height: height()}">
+    <div class="plugin-graph-viewer" >
 
         <div class="graph-manager-top-bar">
 
@@ -55,12 +55,9 @@
 
         </div>
 
-        <div class="graph-manager-body" :class="{v6: isV6}">
+        <div class="graph-manager-body" >
 
-            <side-bar class="graph-manager-side-bar"
-                      :buttons="sideBarButton"
-                      :option="selectedNode"
-            />
+
 
             <nodes-list class="graph-viewer"
 
@@ -75,7 +72,10 @@
                         @right-click=""
                         @hide-bim-object="onHideBimObject"
             />
-
+            <side-bar class="graph-manager-side-bar"
+                      :buttons="sideBarButton"
+                      :option="selectedNode"
+            />
 
         </div>
     </div>
@@ -178,10 +178,9 @@
 </script>
 
 <style>
-
-
     .plugin-graph-viewer {
         overflow: hidden;
+        min-width: 260px;
     }
 
     .plugin-graph-viewer * {
@@ -190,7 +189,7 @@
     }
 
     .graph-viewer {
-        border-left: 1px solid rgba(128, 128, 128, 0.64);
+        border-right: 1px solid rgba(128, 128, 128, 0.64);
         width: 100%;
         overflow-y: auto;
         overflow-x: hidden;
@@ -252,11 +251,9 @@
 
     .graph-manager-body {
         display: flex;
-        height: calc(100% - 42px);
         width: 100%;
+        height: 100%;
     }
-    .v6{
-        height: calc(100% - 59px);
-    }
+
 
 </style>
