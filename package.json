@@ -1,6 +1,6 @@
 {
   "name": "spinal-env-viewer-plugin-graph-manager",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,25 +8,27 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LorisC/graph-manager.git"
+    "url": "git+https://github.com/spinalcom/graph-manager.git"
   },
   "keywords": [],
   "author": "",
   "license": "SpinalCom",
   "bugs": {
-    "url": "https://github.com/LorisC/graph-manager/issues"
+    "url": "https://github.com/spinalcom/graph-manager/issues"
   },
-  "homepage": "https://github.com/LorisC/graph-manager#readme",
+  "homepage": "https://github.com/spinalcom/graph-manager#readme",
   "dependencies": {
     "spinal-core-connectorjs": "git+https://github.com/spinalcom/spinal-core-connectorjs.git",
     "spinal-env-viewer-context-menu-service": "git+https://github.com/spinalcom/spinal-env-viewer-context-menu-service.git",
     "spinal-env-viewer-graph-service": "git+https://github.com/spinalcom/Spinal-Graph-Service.git",
     "spinal-env-viewer-panel-manager-service": "git+https://github.com/spinalcom/spinal-env-viewer-panel-manager-service.git",
-    "spinal-env-viewer-panel-manager-service_spinalforgeextention": "git+https://github.com/spinalcom/spinal-env-viewer-panel-manager-service_spinalforgeextention.git",
-    "spinal-env-viewer-plugin-graph-manager-vue": "git+https://github.com/spinalcom/spinal-env-viewer-plugin-graph-manager-vue.git"
+    "spinal-env-viewer-vue-components-lib": "git+https://github.com/spinalcom/spinal-env-viewer-vue-components-lib.git",
+    "vue": "^2.6.10",
+    "vuex": "^3.1.1"
   },
   "browserify": {
     "transform": [
+      "vueify",
       "babelify"
     ]
   }
