@@ -23,7 +23,6 @@
  */
 
 import Vue from 'vue';
-import VueMaterial from 'vue-material';
 import Vuex from "vuex";
 import { spinalContextMenuService } from "spinal-env-viewer-context-menu-service";
 import {
@@ -34,7 +33,6 @@ import { SpinalGraphService } from "spinal-env-viewer-graph-service";
 
 Vue.config.productionTip = false;
 
-Vue.use( VueMaterial );
 Vue.use( Vuex );
 
 function initialState() {
@@ -86,6 +84,35 @@ let store = new Vuex.Store( {
           if (!state.nodes.hasOwnProperty( contextId )) {
             state.nodes[contextId] = contexts[i];
           }
+        }
+      },
+      UPDATE_CONTEXTS: (state, contexts) => {
+        for (const context of contexts) {
+          const contextId = context.id.get();
+          const contextName = context.name.get();
+          if (!state.nodes.hasOwnProperty(contextId)) {
+            state.nodes[contextId] = context;
+          }
+          if (!state.contextsId.includes(contextId)) {
+            if (window.spinal.SHOW_HIDDEN_NODES === true) {
+              state.contextsId.push(contextId);
+            } else if (contextName.startsWith('.') || contextName.startsWith('BIMObjectContext')) {
+              continue;
+            } else {
+              state.contextsId.push(contextId);
+            }
+          }
+        }
+        const toRms = state.contextsId.reduce((acc, contextId) => {
+          if (contexts.some((cont) => {
+            return cont.id.get() === contextId;
+          }) === false) {
+            acc.push(contextId);
+          }
+          return acc;
+        }, []);
+        for (const toRm of toRms) {
+          state.contextsId.splice(state.contextsId.indexOf(toRm), 1);
         }
       },
       ADD_NODE: ( state, node ) => {
@@ -207,7 +234,7 @@ let store = new Vuex.Store( {
     
     actions: {
       getNode( context, event ) {
-        SpinalGraphService.findNode( event ).then(
+        return SpinalGraphService.findNode( event ).then(
           node => context.commit( 'ADD_NODE', node )
         ).catch( e => console.error( e ) );
       },
@@ -216,7 +243,7 @@ let store = new Vuex.Store( {
         option[OPTION_SELECTED_NODE_INFO] = context.state.nodes[event.nodeId];
         option[OPTION_CONTEXT_INFO] = context.state.nodes[event.contextId];
         context.commit( "SET_ACTIVE_NODE", event.nodeId );
-        spinalContextMenuService
+        return spinalContextMenuService
           .getApps( "GraphManagerSideBar", option )
           .then( buttons => {
             context.commit( "SET_SIDE_BAR", buttons );
@@ -227,7 +254,7 @@ let store = new Vuex.Store( {
           } );
       },
       retrieveGlobalBar( context, option ) {
-        spinalContextMenuService.getApps( "GraphManagerTopBar", option )
+        return spinalContextMenuService.getApps( "GraphManagerTopBar", option )
           .then( buttons => {
             context.commit( "SET_GLOBAL_BAR", buttons );
           } )
@@ -236,13 +263,8 @@ let store = new Vuex.Store( {
           } );
       },
       pullChildren( context, id ) {
-        SpinalGraphService.getChildren( id, [] ).then(
+        return SpinalGraphService.getChildren( id, [] ).then(
           ( children ) => {
-            for (let i = 0; i < children.length; i++) {
-              for (let j = 0; j < children[i]['childrenIds'].length; j++) {
-                context.dispatch( 'pullChildren', children[i]['childrenIds'][j] );
-              }
-            }
             context.commit( 'ADD_NODES', children );
           }
         );
