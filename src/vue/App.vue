@@ -180,7 +180,7 @@
 <style>
     .plugin-graph-viewer {
         overflow: hidden;
-        min-width: 260px;
+        width: 260px;
     }
 
     .plugin-graph-viewer * {
@@ -230,7 +230,6 @@
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         background-color: #121212;
     }
-
     .graph-viewer::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     }
@@ -247,6 +246,21 @@
     .graph-manager-top-tools-bar {
         float: left;
         width: 98%;
+        overflow: auto;
+        display: flex;
+    }
+
+    .graph-manager-top-tools-bar::-webkit-scrollbar {
+        height: 4px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #121212;
+    }
+    .graph-manager-top-tools-bar::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+    .graph-manager-top-tools-bar::-webkit-scrollbar-thumb {
+        outline: 1px solid slategrey;
+        background-color: #737374;
     }
 
     .graph-manager-body {
