@@ -41,7 +41,7 @@
                     v-else
                     class="plugin-graph-viewer-refresh"
                     icon="search"
-                    tool-tip="refresh graph"
+                    tool-tip="search graph"
                     v-on:click="isSearchActive = true"
             />
 
