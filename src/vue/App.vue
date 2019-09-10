@@ -230,9 +230,11 @@
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         background-color: #121212;
     }
+
     .graph-viewer::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     }
+
     .graph-viewer::-webkit-scrollbar-thumb {
         outline: 1px solid slategrey;
         background-color: #737374;
@@ -255,9 +257,11 @@
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
         background-color: #121212;
     }
+
     .graph-manager-top-tools-bar::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     }
+
     .graph-manager-top-tools-bar::-webkit-scrollbar-thumb {
         outline: 1px solid slategrey;
         background-color: #737374;
