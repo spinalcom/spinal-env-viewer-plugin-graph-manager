@@ -252,7 +252,7 @@ let store = new Vuex.Store({
       option[OPTION_SELECTED_NODE_INFO] = context.state.nodes[event.nodeId];
       option[OPTION_CONTEXT_INFO] = context.state.nodes[event.contextId];
       context.commit("SET_ACTIVE_NODE", event.nodeId);
-      context.commit("CLEAR_SIDE_BAR", buttons);
+      context.commit("CLEAR_SIDE_BAR");
       context.commit("SET_SIDE_BAR_LOADING", true);
       return spinalContextMenuService
         .getApps("GraphManagerSideBar", option)
