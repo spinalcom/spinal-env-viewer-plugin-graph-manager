@@ -39,6 +39,7 @@ function initialState() {
   return {
     topBarButton: [],
     sideBarButton: [],
+    sideBarButtonLoading: false,
     contextsId: [],
     searchId: [],
     nodes: {},
@@ -132,6 +133,14 @@ let store = new Vuex.Store({
     GET_NODE: (state) => {
       state.sync.splice(0);
       //cf GraphManager
+    },
+
+    SET_SIDE_BAR_LOADING: (state, showLoaded) => {
+      state.sideBarButtonLoading = showLoaded;
+    },
+
+    CLEAR_SIDE_BAR: (state) => {
+      state.sideBarButton = [];
     },
 
     SET_SIDE_BAR: (state, buttons) => {
@@ -243,13 +252,17 @@ let store = new Vuex.Store({
       option[OPTION_SELECTED_NODE_INFO] = context.state.nodes[event.nodeId];
       option[OPTION_CONTEXT_INFO] = context.state.nodes[event.contextId];
       context.commit("SET_ACTIVE_NODE", event.nodeId);
+      context.commit("CLEAR_SIDE_BAR", buttons);
+      context.commit("SET_SIDE_BAR_LOADING", true);
       return spinalContextMenuService
         .getApps("GraphManagerSideBar", option)
         .then(buttons => {
+          context.commit("SET_SIDE_BAR_LOADING", false);
           context.commit("SET_SIDE_BAR", buttons);
           context.commit("SET_SELECTED_NODE", option);
         })
         .catch(e => {
+          context.commit("SET_SIDE_BAR_LOADING", false);
           console.error(e);
         });
     },
