@@ -25,11 +25,7 @@
 <template>
   <div class="plugin-graph-viewer">
     <div class="graph-manager-top-bar">
-      <top-bar
-        :buttons="topBarButton"
-        :option="graph"
-        class="graph-manager-top-tools-bar"
-      />
+      <top-bar :buttons="topBarButton" class="graph-manager-top-tools-bar" />
 
       <input
         v-if="isSearchActive"
